@@ -1,3 +1,4 @@
+cordova.define("cordova-plugin-media.Media", function(require, exports, module) {
 /*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -47,6 +48,7 @@ var Media = function(src, successCallback, errorCallback, statusCallback) {
     this.statusCallback = statusCallback;
     this._duration = -1;
     this._position = -1;
+    this.state = Media.MEDIA_NONE;
     exec(null, this.errorCallback, "Media", "create", [this.id, this.src]);
 };
 
@@ -73,6 +75,7 @@ Media.get = function(id) {
  * Start or resume playing audio file.
  */
 Media.prototype.play = function(options) {
+    options = options || {};
     exec(null, null, "Media", "startPlayingAudio", [this.id, this.src, options]);
 };
 
@@ -186,6 +189,10 @@ Media.prototype.getCurrentAmplitude = function(success, fail) {
     }, fail, "Media", "getCurrentAmplitudeAudio", [this.id]);
 };
 
+Media.prototype.isPlaying = function() {
+    return this.state === Media.MEDIA_RUNNING;
+};
+
 /**
  * Audio has status update.
  * PRIVATE
@@ -195,7 +202,6 @@ Media.prototype.getCurrentAmplitude = function(success, fail) {
  * @param value         Use of value is determined by the msgType
  */
 Media.onStatus = function(id, msgType, value) {
-
     var media = mediaObjects[id];
 
     if (media) {
@@ -233,6 +239,14 @@ Media.onStatus = function(id, msgType, value) {
 
 };
 
+Media.muteAll = function(){
+    exec(null, null, "Media", "muteAll", null);
+}
+
+Media.unmuteAll = function(){
+    exec(null, null, "Media", "unmuteAll", null);
+}
+
 module.exports = Media;
 
 function onMessageFromNative(msg) {
@@ -255,3 +269,5 @@ if (cordova.platformId === 'android' || cordova.platformId === 'amazon-fireos' |
         channel.initializationComplete('onMediaPluginReady');
     });
 }
+
+});
