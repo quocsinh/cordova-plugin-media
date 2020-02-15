@@ -241,11 +241,11 @@ Media.onStatus = function(id, msgType, value) {
 
 Media.muteAll = function(){
     exec(null, null, "Media", "muteAll", null);
-}
+};
 
 Media.unmuteAll = function(){
     exec(null, null, "Media", "unmuteAll", null);
-}
+};
 
 module.exports = Media;
 
